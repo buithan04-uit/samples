@@ -28,7 +28,7 @@ void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &botto
 
 void CGoomba::OnNoCollision(DWORD dt)
 {
-	x += vx * dt;
+	x += vx * dt;//23gu1y23u123
 	y += vy * dt;
 };
 
