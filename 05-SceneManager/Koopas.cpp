@@ -1,4 +1,5 @@
 #include "Koopas.h"
+#include "Goomba.h"
 
 CKoopas::CKoopas(float x, float y) :CGameObject(x, y)
 {
@@ -18,6 +19,13 @@ void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& botto
 		right = left + KOOPAS_BBOX_WIDTH;
 		bottom = top + KOOPAS_BBOX_HEIGHT_DIE;
 	}
+	else if (state == KOOPAS_STATE_SHELL || state == KOOPAS_STATE_KICK)
+	{
+		left = x - KOOPAS_BBOX_WIDTH / 2;
+		top = y - KOOPAS_BBOX_HEIGHT_SHELL / 2;
+		right = left + KOOPAS_BBOX_WIDTH;
+		bottom = top + KOOPAS_BBOX_HEIGHT_SHELL;
+	}
 	else
 	{
 		left = x - KOOPAS_BBOX_WIDTH / 2;
@@ -29,14 +37,16 @@ void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& botto
 
 void CKoopas::OnNoCollision(DWORD dt)
 {
-	x += vx * dt;//23gu1y23u123
+	x += vx * dt;
 	y += vy * dt;
 };
 
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if (dynamic_cast<CGoomba*>(e->obj)) OnCollisionWithGoomba(e);
 	if (!e->obj->IsBlocking()) return;
 	if (dynamic_cast<CKoopas*>(e->obj)) return;
+
 
 	if (e->ny != 0)
 	{
@@ -46,6 +56,14 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = -vx;
 	}
+}
+void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
+	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+	 if (state == KOOPAS_STATE_KICK)
+	 {
+	 	goomba->SetState(GOOMBA_STATE_DIE);
+	 }
+	 else return;
 }
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -58,9 +76,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isDeleted = true;
 		return;
 	}
-	if ((state == KOOPAS_STATE_SHELL) && (GetTickCount64() - shell_start > KOOPAS_SHELL_TIMEOUT))
+	if ((state == KOOPAS_STATE_SHELL || state == KOOPAS_STATE_KICK) && (GetTickCount64() - shell_start > KOOPAS_SHELL_TIMEOUT))
 	{
 		state = KOOPAS_STATE_WALKING;
+		y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2;
 		vx = -KOOPAS_WALKING_SPEED;
 	}
 
@@ -78,9 +97,13 @@ void CKoopas::Render()
 	else  {
 		aniId = ID_ANI_KOOPAS_WALKING_RIGHT;
 	}
-	if (state == KOOPAS_STATE_SHELL)
+	if (state == KOOPAS_STATE_SHELL )
 	{
 		aniId = ID_ANI_KOOPAS_SHELL;
+	}
+	if (state == KOOPAS_STATE_KICK)
+	{
+		aniId = ID_ANI_KOOPAS_KICK;
 	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
@@ -94,13 +117,17 @@ void CKoopas::SetState(int state)
 	{
 	case KOOPAS_STATE_SHELL:
 		shell_start = GetTickCount64();
-		//y += (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2;
+		y += (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2;
 		vx = 0;
 		vy = 0;
 		ay = 0;
 		break;
 	case KOOPAS_STATE_WALKING:
 		vx = -KOOPAS_WALKING_SPEED;
+		break;
+	case KOOPAS_STATE_KICK:
+		vy = 0;
+		ay = 0;
 		break;
 	}
 }

@@ -1,11 +1,12 @@
 #include "Goomba.h"
+ 
 
-CGoomba::CGoomba(float x, float y):CGameObject(x, y)
-{
-	this->ax = 0;
-	this->ay = GOOMBA_GRAVITY;
-	die_start = -1;
-	SetState(GOOMBA_STATE_WALKING);
+CGoomba::CGoomba(float x, float y) : CGameObject(x, y)  
+{  
+   this->ax = 0;  
+   this->ay = GOOMBA_GRAVITY;  
+   die_start = -1;  
+   SetState(GOOMBA_STATE_WALKING);  
 }
 
 void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &bottom)
@@ -28,7 +29,7 @@ void CGoomba::GetBoundingBox(float &left, float &top, float &right, float &botto
 
 void CGoomba::OnNoCollision(DWORD dt)
 {
-	x += vx * dt;//23gu1y23u123
+	x += vx * dt;
 	y += vy * dt;
 };
 
