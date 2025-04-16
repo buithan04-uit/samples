@@ -7,6 +7,10 @@
 #include "Mario.h"
 #include "Goomba.h"
 #include "Koopas.h"
+#include "Tree.h"
+#include "Cloud.h"
+#include "GiftBox.h"
+
 
 
 class CPlayScene: public CScene

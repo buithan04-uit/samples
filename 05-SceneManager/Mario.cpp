@@ -1,4 +1,4 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include "debug.h"
 
 #include "Mario.h"
@@ -6,6 +6,7 @@
 
 #include "Goomba.h"
 #include "Koopas.h"
+#include "GiftBox.h"
 #include "Coin.h"
 #include "Portal.h"
 
@@ -56,6 +57,23 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPortal(e);
 	else if (dynamic_cast<CKoopas*>(e->obj))
 		OnCollisionWithKoopas(e);
+	else if (dynamic_cast<CGiftBox*>(e->obj))
+		OnCollisionWithGiftBox(e);
+}
+
+void CMario::OnCollisionWithGiftBox(LPCOLLISIONEVENT e)
+{
+	CGiftBox * giftbox = dynamic_cast<CGiftBox*>(e->obj);
+
+	if (e->ny > 0) // Đụng từ dưới lên
+	{
+		if (giftbox->GetState() != GIFTBOX_STATE_PICKED)
+		{
+			giftbox->SetState(GIFTBOX_STATE_PICKED);
+			// Optionally đẩy Mario rơi xuống nhẹ nhẹ
+			vy = 0.05f;
+		}
+	}
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
