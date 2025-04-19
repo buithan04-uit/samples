@@ -10,18 +10,22 @@ base.txt
 base1.txt
 tree.txt
 giftbox.txt
+pipe.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = coin , 5 = plaform , 6  = tree, 7 = cloud, 8 = giftbox
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = coin , 5 = plaform , 6  = tree, 7 = cloud, 8 = giftbox, 9 = pipe
 # See OBJECT_TYPE constants in AssetIDs.h
 
 
 
 # BRICKS
-1	0	0	20	16	1
+1	0	0	20	16	1	2
 
-1	1600	0	20	16	1
+1	1600	0	20	16	1	0
+
+# PIPE
+9	150	130	2	31	0
 
 # GIFTBOX
 8	150	130	2	16	0	0
@@ -32,21 +36,21 @@ giftbox.txt
 # 1	352	148	3	16	1
 
 # Tree
-6	100	164	4	16	0
-
+6	100	130	2	30	0	3
 # Cloud
 7	200	100	2	70	0	0
 7	300	100	2	70	0	1
 7	400	100	2	70	0	2
+7	500	100	2	70	0	3
 
 # MARIO
 0	20	10
 #COIN
-4	100	120
-4	120	120
-4	140	120
-4	160	120
-4	180	120
+#4	100	120
+#4	120	120
+#4	140	120
+#4	160	120
+#4	180	120
 
 #Goomba
 2	400	10

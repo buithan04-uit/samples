@@ -118,19 +118,37 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(x, y); break;
+	case OBJECT_TYPE_PIPE: {
+			float m = (float)atof(tokens[3].c_str());
+			float n = (float)atof(tokens[4].c_str());
+			float p = (float)atof(tokens[5].c_str());
+			for (float i = 1; i <= m; i++)
+			{
+				if (p == 1) {
+					obj = new CPipe (x, y + (i * n));
+				}
+				if (p == 0) {
+					obj = new CPipe(x + (i * n), y);
+				}
+				if (i != m) objects.push_back(obj);
+			}
+			break;
+
+		}
 	case OBJECT_TYPE_BRICK: {
 		float m = (float)atof(tokens[3].c_str());
 		float n = (float)atof(tokens[4].c_str());
 		float p = (float)atof(tokens[5].c_str());
-		for (float i = 0; i < m; i++)
+		float q = (float)atof(tokens[6].c_str());
+		for (float i = 1; i <= m; i++)
 		{
 			if (p == 1) {
-				obj = new CBrick(x, y + (i * n)); 
+				obj = new CBrick(x, y + (i * n) , q); 
 			}
 			if (p == 0) {
-				obj = new CBrick(x + (i * n), y );
+				obj = new CBrick(x + (i * n), y , q);
 			}
-			if (i != m - 1) objects.push_back(obj);
+			if (i != m) objects.push_back(obj);
 		}
 		break;
 		
@@ -139,15 +157,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float m = (float)atof(tokens[3].c_str());
 		float n = (float)atof(tokens[4].c_str());
 		float p = (float)atof(tokens[5].c_str());
-		for (float i = 0; i < m; i++)
+		float q = (float)atof(tokens[6].c_str());
+		for (float i = 1; i <= m; i++)
 		{
 			if (p == 1) {
-				obj = new CTree(x, y + (i * n));
+				obj = new CTree(x, y + (i * n) , q);
 			}
 			if (p == 0) {
-				obj = new CTree(x + (i * n), y);
+				obj = new CTree(x + (i * n), y , q);
 			}
-			if (i != m - 1) objects.push_back(obj);
+			if (i != m) objects.push_back(obj);
 		}
 		break;
 
@@ -157,7 +176,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float n = (float)atof(tokens[4].c_str());
 		float p = (float)atof(tokens[5].c_str());
 		float q = (float)atof(tokens[6].c_str());
-		for (float i = 0; i < m; i++)
+		for (float i = 1; i <= m; i++)
 		{
 			if (p == 1) {
 				obj = new CGiftBox(x, y + (i * n) , q);
@@ -165,7 +184,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			if (p == 0) {
 				obj = new CGiftBox(x + (i * n), y , q);
 			}
-			if (i != m - 1) objects.push_back(obj);
+			if (i != m ) objects.push_back(obj);
 		}
 		break;
 
@@ -175,7 +194,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float n = (float)atof(tokens[4].c_str());
 		float p = (float)atof(tokens[5].c_str());
 		float q = (float)atof(tokens[6].c_str());
-		for (float i = 0; i < m; i++)
+		for (float i = 1; i <= m; i++)
 		{
 			if (p == 1) {
 				obj = new CCloud(x, y + (i * n) , q);
@@ -183,7 +202,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			if (p == 0) {
 				obj = new CCloud(x + (i * n), y , q);
 			}
-			if (i != m - 1) objects.push_back(obj);
+			if (i != m) objects.push_back(obj);
 		}
 		break;
 

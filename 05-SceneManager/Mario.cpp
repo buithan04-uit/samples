@@ -11,7 +11,6 @@
 #include "Portal.h"
 
 #include "Collision.h"
-
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
@@ -63,18 +62,18 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithGiftBox(LPCOLLISIONEVENT e)
 {
-	CGiftBox * giftbox = dynamic_cast<CGiftBox*>(e->obj);
+	CGiftBox* giftbox = dynamic_cast<CGiftBox*>(e->obj);
 
 	if (e->ny > 0) // Đụng từ dưới lên
 	{
 		if (giftbox->GetState() != GIFTBOX_STATE_PICKED)
 		{
 			giftbox->SetState(GIFTBOX_STATE_PICKED);
-			// Optionally đẩy Mario rơi xuống nhẹ nhẹ
 			vy = 0.05f;
 		}
 	}
 }
+
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
@@ -308,7 +307,7 @@ void CMario::Render()
 
 	//RenderBoundingBox();
 	
-	DebugOutTitle(L"Coins: %d", coin);
+	//DebugOutTitle(L"Coins: %d", coin);
 }
 
 void CMario::SetState(int state)

@@ -14,12 +14,10 @@
 #define GIFTBOX_STATE_PICKED 1
 
 class CGiftBox : public CGameObject {
-	int state;
 public:
 	CGiftBox(float x, float y, int state) : CGameObject(x, y) { this->state = state; }
 	void Render();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
-	void SetState(int state) { this->state = state; }
-	int GetState() const { return this->state; }
+	virtual void SetState(int state);
 };

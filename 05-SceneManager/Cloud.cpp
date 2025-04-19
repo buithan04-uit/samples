@@ -9,6 +9,8 @@ void CCloud::Render()
 		animations->Get(ID_ANI_CLOUD_MEDIUM)->Render(x, y);
 	else if (this->type == 2)
 		animations->Get(ID_ANI_CLOUD_LARGE)->Render(x, y);
+	else if (this->type == 3)
+		animations->Get(ID_ANI_CLOUD_MINI)->Render(x, y);
 	//RenderBoundingBox();
 }
 
@@ -35,5 +37,11 @@ void CCloud::GetBoundingBox(float& l, float& t, float& r, float& b)
 		r = l + CLOUD_LARGE_BBOX_WIDTH;
 		b = t + CLOUD_LARGE_BBOX_HEIGHT;
 	}
-
+	else if (this->type == 3)
+	{
+		l = x - CLOUD_MINI_BBOX_WIDTH / 2;
+		t = y - CLOUD_MINI_BBOX_HEIGHT / 2;
+		r = l + CLOUD_MINI_BBOX_WIDTH;
+		b = t + CLOUD_MINI_BBOX_HEIGHT;
+	}
 }

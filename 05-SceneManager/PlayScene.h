@@ -10,6 +10,7 @@
 #include "Tree.h"
 #include "Cloud.h"
 #include "GiftBox.h"
+#include "Pipe.h"
 
 
 
