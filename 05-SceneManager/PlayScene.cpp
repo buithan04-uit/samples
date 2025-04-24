@@ -117,7 +117,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
-	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(x, y); break;
+	case OBJECT_TYPE_KOOPAS: { 
+		obj = new CKoopas (x, y);
+		break;
+	}
 	case OBJECT_TYPE_PIPE: {
 			float m = (float)atof(tokens[3].c_str());
 			float n = (float)atof(tokens[4].c_str());

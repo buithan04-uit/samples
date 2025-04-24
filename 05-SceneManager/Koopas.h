@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Fallsensor.h"
 
 #define KOOPAS_GRAVITY 0.002f
 #define KOOPAS_WALKING_SPEED 0.05f
@@ -27,9 +28,13 @@
 
 class CKoopas : public CGameObject
 {
+
+	
 protected:
 	float ax;
 	float ay;
+
+	CFallsensor* fallsensor;
 
 	ULONGLONG die_start;
 	ULONGLONG shell_start;
@@ -49,4 +54,8 @@ public:
 	CKoopas(float x, float y);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	virtual void SetState(int state);
+	float GetVx() { return vx; }
+	float GetVy() { return vy; }
+
+
 };

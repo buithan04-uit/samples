@@ -8,6 +8,7 @@ CKoopas::CKoopas(float x, float y) :CGameObject(x, y)
 	die_start = -1;
 	shell_start = -1;
 	SetState(KOOPAS_STATE_WALKING);
+	fallsensor = new CFallsensor(x + KOOPAS_BBOX_WIDTH + 1, y);
 }
 
 void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -55,15 +56,22 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (e->nx != 0)
 	{
 		vx = -vx;
+		if (state == KOOPAS_STATE_WALKING) {
+			if (vx > 0) {
+				fallsensor->SetPosition(x + KOOPAS_BBOX_WIDTH + 1, y);
+			}
+			else {
+				fallsensor->SetPosition(x - KOOPAS_BBOX_WIDTH - 1, y);
+			}
+		}
 	}
 }
 void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-	 if (state == KOOPAS_STATE_KICK)
-	 {
-	 	goomba->SetState(GOOMBA_STATE_DIE);
-	 }
-	 else return;
+	if (state == KOOPAS_STATE_KICK)
+	{
+		goomba->SetState(GOOMBA_STATE_DIE);
+	}
 }
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -81,8 +89,34 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		state = KOOPAS_STATE_WALKING;
 		y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2;
 		vx = -KOOPAS_WALKING_SPEED;
+		if (state != KOOPAS_STATE_SHELL && state != KOOPAS_STATE_KICK) {
+			if (vx > 0) {
+				fallsensor->SetPosition(x + KOOPAS_BBOX_WIDTH + 1, y);
+			}
+			else {
+				fallsensor->SetPosition(x - KOOPAS_BBOX_WIDTH - 1, y);
+			}
+		}
+	}
+	if (state == KOOPAS_STATE_WALKING) {
+		if (fallsensor->GetVy() != 0) {
+			vx = -vx;
+			if (vx > 0) {
+				fallsensor->SetPosition(x + KOOPAS_BBOX_WIDTH + 1, y);
+			}
+			else {
+				fallsensor->SetPosition(x - KOOPAS_BBOX_WIDTH - 1, y);
+			}
+		}
+	}
+	if (state == KOOPAS_STATE_WALKING) {
+		fallsensor->setSpeed(vx);
+	}
+	else {
+		fallsensor->setSpeed(0);
 	}
 
+	fallsensor->Update(dt, coObjects);
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -94,10 +128,10 @@ void CKoopas::Render()
 	if (vx < 0) {
 		aniId = ID_ANI_KOOPAS_WALKING_LEFT;
 	}
-	else  {
+	else {
 		aniId = ID_ANI_KOOPAS_WALKING_RIGHT;
 	}
-	if (state == KOOPAS_STATE_SHELL )
+	if (state == KOOPAS_STATE_SHELL)
 	{
 		aniId = ID_ANI_KOOPAS_SHELL;
 	}
@@ -106,6 +140,7 @@ void CKoopas::Render()
 		aniId = ID_ANI_KOOPAS_KICK;
 	}
 
+	fallsensor->Render();
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
 }
