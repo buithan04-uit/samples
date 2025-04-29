@@ -11,14 +11,15 @@
 #define KOOPAS_BBOX_HEIGHT_SHELL 16
 #define KOOPAS_BBOX_HEIGHT_DIE 7
 
-#define KOOPAS_SHELL_TIMEOUT 10000
+#define KOOPAS_SHELL_TIMEOUT 7000
+#define KOOPAS_KICK_TIMEOUT 7000
 #define KOOPAS_DIE_TIMEOUT 500
 
 #define KOOPAS_STATE_WALKING 100
 #define KOOPAS_STATE_SHELL 200
 #define KOOPAS_STATE_DIE 300
 #define KOOPAS_STATE_KICK 400
-#define KOOPAS_STATE_HOLDED 500
+#define KOOPAS_STATE_HELD 500
 
 
 #define ID_ANI_KOOPAS_WALKING_RIGHT 6000
@@ -34,10 +35,11 @@ class CKoopas : public CGameObject
 protected:
 	float ax;
 	float ay;
-
+	bool isBeingHeld;
 	CFallsensor* fallsensor;
 
 	ULONGLONG die_start;
+	ULONGLONG kick_start;
 	ULONGLONG shell_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -57,6 +59,7 @@ public:
 	virtual void SetState(int state);
 	float GetVx() { return vx; }
 	float GetVy() { return vy; }
+	void SetIsBeingHeld(bool isBeingHeld) { this->isBeingHeld = isBeingHeld; }
 
 
 };

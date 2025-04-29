@@ -3,6 +3,7 @@
 
 CKoopas::CKoopas(float x, float y) :CGameObject(x, y)
 {
+	this->isBeingHeld = false;
 	this->ax = 0;
 	this->ay = KOOPAS_GRAVITY;
 	die_start = -1;
@@ -20,7 +21,7 @@ void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& botto
 		right = left + KOOPAS_BBOX_WIDTH;
 		bottom = top + KOOPAS_BBOX_HEIGHT_DIE;
 	}
-	else if (state == KOOPAS_STATE_SHELL || state == KOOPAS_STATE_KICK)
+	else if (state == KOOPAS_STATE_SHELL || state == KOOPAS_STATE_KICK || state == KOOPAS_STATE_HELD)
 	{
 		left = x - KOOPAS_BBOX_WIDTH / 2;
 		top = y - KOOPAS_BBOX_HEIGHT_SHELL / 2;
@@ -76,6 +77,9 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 
 void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (isBeingHeld)
+		return;
+
 	vy += ay * dt;
 	vx += ax * dt;
 
@@ -84,7 +88,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isDeleted = true;
 		return;
 	}
-	if ((state == KOOPAS_STATE_SHELL || state == KOOPAS_STATE_KICK) && (GetTickCount64() - shell_start > KOOPAS_SHELL_TIMEOUT))
+	if (state == KOOPAS_STATE_KICK && (GetTickCount64() - kick_start > KOOPAS_KICK_TIMEOUT)) {
+		state = KOOPAS_STATE_DIE;
+	}
+	if ((state == KOOPAS_STATE_SHELL || state == KOOPAS_STATE_HELD) && (GetTickCount64() - shell_start > KOOPAS_SHELL_TIMEOUT))
 	{
 		state = KOOPAS_STATE_WALKING;
 		y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2;
@@ -131,7 +138,7 @@ void CKoopas::Render()
 	else {
 		aniId = ID_ANI_KOOPAS_WALKING_RIGHT;
 	}
-	if (state == KOOPAS_STATE_SHELL)
+	if (state == KOOPAS_STATE_SHELL || state == KOOPAS_STATE_HELD)
 	{
 		aniId = ID_ANI_KOOPAS_SHELL;
 	}
@@ -157,10 +164,21 @@ void CKoopas::SetState(int state)
 		vy = 0;
 		ay = 0;
 		break;
+	case KOOPAS_STATE_HELD:
+		vx = 0;
+		vy = 0;
+		ay = 0;
+		break;
 	case KOOPAS_STATE_WALKING:
 		vx = -KOOPAS_WALKING_SPEED;
 		break;
 	case KOOPAS_STATE_KICK:
+		kick_start = GetTickCount64();
+		vy = 0;
+		ay = 0;
+		break;
+	case KOOPAS_STATE_DIE:
+		die_start = GetTickCount64();
 		vy = 0;
 		ay = 0;
 		break;

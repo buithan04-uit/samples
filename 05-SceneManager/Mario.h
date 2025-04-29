@@ -3,6 +3,7 @@
 
 #include "Animation.h"
 #include "Animations.h"
+#include "Koopas.h"
 
 #include "debug.h"
 
@@ -114,6 +115,9 @@ class CMario : public CGameObject
 	BOOLEAN isOnPlatform;
 	int coin; 
 
+	CKoopas* heldKoopas = nullptr;
+	bool isHoldingKoopas() { return heldKoopas != nullptr; }
+
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
@@ -140,6 +144,8 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
+	void ReleaseKoopas();
+	bool IsHoldingKoopas() { return heldKoopas != nullptr; }
 
 	int IsCollidable()
 	{ 

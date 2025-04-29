@@ -27,6 +27,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable_start = 0;
 		untouchable = 0;
 	}
+	if (heldKoopas != nullptr)
+	{
+		float koopaX = x + (nx > 0 ? MARIO_BIG_BBOX_WIDTH / 2 + KOOPAS_BBOX_WIDTH / 2 : -MARIO_BIG_BBOX_WIDTH / 2 - KOOPAS_BBOX_WIDTH / 2);
+		float koopaY = y;
+
+		heldKoopas->SetPosition(koopaX, koopaY);
+		heldKoopas->SetSpeed(0, 0); // Không rơi khi đang bị giữ
+	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -132,15 +140,15 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 		}
 		else if (koopas->GetState() != KOOPAS_STATE_DIE)
 		{
-			koopas->SetState(KOOPAS_STATE_DIE);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			//koopas->SetState(KOOPAS_STATE_DIE);
+			//vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 	}
 	else // hit by Koopas
 	{
 		if (untouchable == 0)
 		{
-			if (koopas->GetState() != KOOPAS_STATE_SHELL )
+			if (koopas->GetState() != KOOPAS_STATE_SHELL && koopas->GetState() != KOOPAS_STATE_HELD)
 			{
 				if (level > MARIO_LEVEL_SMALL)
 				{
@@ -164,7 +172,16 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 					}
 				}
 				else {
-					
+					// Mario đang chạy
+					CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+
+					if (koopas->GetState() == KOOPAS_STATE_SHELL && !isHoldingKoopas() && (e->nx != 0))
+					{
+						// Cầm Koopa
+						heldKoopas = koopas;
+						koopas->SetState(KOOPAS_STATE_HELD);
+						koopas->SetIsBeingHeld(true);
+					}
 				}
 			}
 		}
@@ -441,5 +458,19 @@ void CMario::SetLevel(int l)
 		y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT) / 2;
 	}
 	level = l;
+}
+void CMario::ReleaseKoopas()
+{
+	if (heldKoopas)
+	{
+		heldKoopas->SetState(KOOPAS_STATE_KICK); // hoặc KOOPA_STATE_ROLLING nếu muốn ném lăn
+		heldKoopas->SetIsBeingHeld(false);
+
+		// Tùy hướng ném
+		float speed = nx > 0 ? 0.3f : -0.3f;
+		heldKoopas->SetSpeed(speed, 0.01f);
+
+		heldKoopas = nullptr;
+	}
 }
 
