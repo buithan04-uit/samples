@@ -16,7 +16,7 @@ class CFallsensor : public CGameObject {
 		virtual int IsCollidable() { return 1; }; 	
 		virtual int IsBlocking() { return 0; } 	
 		virtual void OnNoCollision(DWORD dt);  	
-		virtual void OnCollisionWith(LPCOLLISIONEVENT e);   
+		virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 	public: 	
 		virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects); 	
 		virtual void Render(); 	CFallsensor(float x, float y); 	

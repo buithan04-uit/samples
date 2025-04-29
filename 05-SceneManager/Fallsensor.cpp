@@ -28,12 +28,13 @@ void CFallsensor::OnNoCollision(DWORD dt) {
     y += vy * dt;
 }
 
-void CFallsensor::OnCollisionWith(LPCOLLISIONEVENT e) {
+void CFallsensor::OnCollisionWith(LPCOLLISIONEVENT e ) {
     if (!e->obj->IsBlocking()) return;
 
     if (e->ny != 0) {
         vy = 0;
     }
+	
 }
 
 void CFallsensor::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
@@ -46,5 +47,5 @@ void CFallsensor::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 }
 
 void CFallsensor::Render() {
-    RenderBoundingBox(); // hoặc bỏ nếu không debug
+    RenderBoundingBox(); 
 }

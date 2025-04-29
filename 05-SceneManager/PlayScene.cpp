@@ -32,6 +32,10 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 
 #define MAX_SCENE_LINE 1024
 
+void CPlayScene::AddObject(LPGAMEOBJECT obj) {
+	objects.push_back(obj); 
+}
+
 void CPlayScene::_ParseSection_SPRITES(string line)
 {
 	vector<string> tokens = split(line);

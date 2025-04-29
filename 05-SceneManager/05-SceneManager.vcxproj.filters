@@ -182,5 +182,8 @@
     <ClInclude Include="Fallsensor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BouncingCoin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

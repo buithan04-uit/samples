@@ -8,6 +8,9 @@
 #include "Koopas.h"
 #include "GiftBox.h"
 #include "Coin.h"
+#include "BouncingCoin.h"
+#include "PlayScene.h"
+#include "Fallsensor.h"
 #include "Portal.h"
 
 #include "Collision.h"
@@ -37,6 +40,7 @@ void CMario::OnNoCollision(DWORD dt)
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if (dynamic_cast<CFallsensor*>(e->obj)) return;
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
@@ -70,7 +74,13 @@ void CMario::OnCollisionWithGiftBox(LPCOLLISIONEVENT e)
 		{
 			giftbox->SetState(GIFTBOX_STATE_PICKED);
 			vy = 0.05f;
+
+			CBouncingCoin* coin = new CBouncingCoin(giftbox->GetX(), giftbox->GetY() - 16);
+			CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+			scene->AddObject(coin);  // Hàm tự định nghĩa trong scene
+
 		}
+		
 	}
 }
 
@@ -144,12 +154,17 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 				}
 			}
 			else {
-				koopas->SetState(KOOPAS_STATE_KICK);
-				if (e->nx < 0) {
-					koopas->SetSpeed(0.3, 0);
+				if (state != MARIO_STATE_RUNNING_LEFT && state != MARIO_STATE_RUNNING_RIGHT) {
+					koopas->SetState(KOOPAS_STATE_KICK);
+					if (e->nx < 0) {
+						koopas->SetSpeed(0.3, 0);
+					}
+					else {
+						koopas->SetSpeed(-0.3, 0);
+					}
 				}
 				else {
-					koopas->SetSpeed(-0.3, 0);
+					
 				}
 			}
 		}
@@ -307,7 +322,7 @@ void CMario::Render()
 
 	//RenderBoundingBox();
 	
-	//DebugOutTitle(L"Coins: %d", coin);
+	DebugOutTitle(L"Coins: %d", coin);
 }
 
 void CMario::SetState(int state)
