@@ -30,10 +30,28 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (heldKoopas != nullptr)
 	{
 		float koopaX = x + (nx > 0 ? MARIO_BIG_BBOX_WIDTH / 2 + KOOPAS_BBOX_WIDTH / 2 : -MARIO_BIG_BBOX_WIDTH / 2 - KOOPAS_BBOX_WIDTH / 2);
-		float koopaY = y;
+		float koopaY;
+		if (level == MARIO_LEVEL_BIG){
+			koopaY = y;
+		}
+		else if (level == MARIO_LEVEL_SMALL) {
+			koopaY = y - 5;
+		}
+
 
 		heldKoopas->SetPosition(koopaX, koopaY);
 		heldKoopas->SetSpeed(0, 0); // Không rơi khi đang bị giữ
+
+		// Kiểm tra timeout
+		if (GetTickCount64() - hold_start >= MARIO_HOLDING_TIMEOUT)
+		{
+			// Tự động thả Koopas và chuyển sang trạng thái đi lại
+			heldKoopas->SetIsBeingHeld(false);
+			heldKoopas->SetState(KOOPAS_STATE_WALKING);
+			heldKoopas->SetPosition(koopaX, koopaY - 10);
+			heldKoopas->GetFallsensor()->SetPosition(koopaX + (nx > 0 ? KOOPAS_BBOX_WIDTH + 1 : -KOOPAS_BBOX_WIDTH - 1), koopaY);
+			heldKoopas = nullptr;
+		}
 	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -162,7 +180,7 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 				}
 			}
 			else {
-				if (state != MARIO_STATE_RUNNING_LEFT && state != MARIO_STATE_RUNNING_RIGHT) {
+				if (state != MARIO_STATE_RUNNING_LEFT && state != MARIO_STATE_RUNNING_RIGHT && koopas->GetState() != KOOPAS_STATE_HELD) {
 					koopas->SetState(KOOPAS_STATE_KICK);
 					if (e->nx < 0) {
 						koopas->SetSpeed(0.3, 0);
@@ -175,12 +193,13 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 					// Mario đang chạy
 					CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
 
-					if (koopas->GetState() == KOOPAS_STATE_SHELL && !isHoldingKoopas() && (e->nx != 0))
+					if (koopas->GetState() == KOOPAS_STATE_SHELL && !isHoldingKoopas() && (e->nx != 0) && isPressingA)
 					{
 						// Cầm Koopa
 						heldKoopas = koopas;
 						koopas->SetState(KOOPAS_STATE_HELD);
 						koopas->SetIsBeingHeld(true);
+						hold_start = GetTickCount64();
 					}
 				}
 			}
@@ -471,6 +490,7 @@ void CMario::ReleaseKoopas()
 		heldKoopas->SetSpeed(speed, 0.01f);
 
 		heldKoopas = nullptr;
+		hold_start = 0;
 	}
 }
 

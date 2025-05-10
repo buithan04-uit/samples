@@ -214,6 +214,24 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 
 	}
+	case OBJECT_TYPE_BOX: {
+		float m = (float)atof(tokens[3].c_str());
+		float n = (float)atof(tokens[4].c_str());
+		float p = (float)atof(tokens[5].c_str());
+		float q = (float)atof(tokens[6].c_str());
+		for (float i = 1; i <= m; i++)
+		{
+			if (p == 1) {
+				obj = new CBox(x, y + (i * n), q);
+			}
+			if (p == 0) {
+				obj = new CBox(x + (i * n), y, q);
+			}
+			if (i != m) objects.push_back(obj);
+		}
+		break;
+
+	}
 
 	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 

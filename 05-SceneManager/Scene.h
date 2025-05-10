@@ -1,6 +1,7 @@
 #pragma once
 
 #include "KeyEventHandler.h"
+#include "GameObject.h"
 
 /*
 *  Abstract class for a game scene
@@ -11,6 +12,7 @@ protected:
 	LPKEYEVENTHANDLER key_handler;
 	int id;
 	LPCWSTR sceneFilePath;
+	vector<LPGAMEOBJECT> objects;
 
 public: 
 	CScene(int id, LPCWSTR filePath)
@@ -25,6 +27,9 @@ public:
 	virtual void Unload() = 0;
 	virtual void Update(DWORD dt) = 0;
 	virtual void Render() = 0; 
+	virtual void AddObject(LPGAMEOBJECT obj) {
+		objects.push_back(obj);
+	}
 };
 typedef CScene * LPSCENE;
 

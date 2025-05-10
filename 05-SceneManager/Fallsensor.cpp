@@ -1,5 +1,6 @@
 ﻿#include "Fallsensor.h"
 #include "Koopas.h"
+#include "Mario.h"
 
 CFallsensor::CFallsensor(float x, float y) : CGameObject(x, y) {
     this->ax = 0;
@@ -30,6 +31,7 @@ void CFallsensor::OnNoCollision(DWORD dt) {
 
 void CFallsensor::OnCollisionWith(LPCOLLISIONEVENT e ) {
     if (!e->obj->IsBlocking()) return;
+	if (dynamic_cast<CMario*>(e->obj)) return;
 
     if (e->ny != 0) {
         vy = 0;

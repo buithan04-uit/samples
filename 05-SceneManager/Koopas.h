@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 #include "Fallsensor.h"
+#include "Game.h"
+#include "Scene.h"
 
 #define KOOPAS_GRAVITY 0.002f
 #define KOOPAS_WALKING_SPEED 0.05f
@@ -12,6 +14,7 @@
 #define KOOPAS_BBOX_HEIGHT_DIE 7
 
 #define KOOPAS_SHELL_TIMEOUT 7000
+#define KOOPAS_HELD_TIMEOUT 7000
 #define KOOPAS_KICK_TIMEOUT 7000
 #define KOOPAS_DIE_TIMEOUT 500
 
@@ -41,6 +44,7 @@ protected:
 	ULONGLONG die_start;
 	ULONGLONG kick_start;
 	ULONGLONG shell_start;
+	ULONGLONG held_start;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -56,10 +60,13 @@ protected:
 public:
 	CKoopas(float x, float y);
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithGiftBox(LPCOLLISIONEVENT e);
 	virtual void SetState(int state);
+	void SetAx(float ax) { this->ax = ax; }
 	float GetVx() { return vx; }
 	float GetVy() { return vy; }
 	void SetIsBeingHeld(bool isBeingHeld) { this->isBeingHeld = isBeingHeld; }
+	CFallsensor* GetFallsensor() { return fallsensor; }
 
 
 };

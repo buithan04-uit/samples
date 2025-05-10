@@ -101,6 +101,7 @@
 
 
 #define MARIO_UNTOUCHABLE_TIME 2500
+#define MARIO_HOLDING_TIMEOUT 7000
 
 class CMario : public CGameObject
 {
@@ -115,7 +116,9 @@ class CMario : public CGameObject
 	BOOLEAN isOnPlatform;
 	int coin; 
 
-	CKoopas* heldKoopas = nullptr;
+	CKoopas * heldKoopas = nullptr;
+	bool isPressingA = false;
+	ULONGLONG hold_start;
 	bool isHoldingKoopas() { return heldKoopas != nullptr; }
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
@@ -134,6 +137,8 @@ public:
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
+		//
+		isPressingA = false;
 
 		level = MARIO_LEVEL_BIG;
 		untouchable = 0;
@@ -151,6 +156,8 @@ public:
 	{ 
 		return (state != MARIO_STATE_DIE); 
 	}
+
+	void SetIsPressingA(bool isPressingA) { this->isPressingA = isPressingA; }
 
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
 

@@ -11,6 +11,8 @@
 #include "Cloud.h"
 #include "GiftBox.h"
 #include "Pipe.h"
+#include "Box.h"
+#include "BoxColilsion.h"
 
 
 
@@ -20,7 +22,7 @@ protected:
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
 
-	vector<LPGAMEOBJECT> objects;
+
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);

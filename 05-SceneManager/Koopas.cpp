@@ -1,5 +1,8 @@
-#include "Koopas.h"
+﻿#include "Koopas.h"
 #include "Goomba.h"
+#include "GiftBox.h"
+#include "BouncingCoin.h"
+#include "PlayScene.h"
 
 CKoopas::CKoopas(float x, float y) :CGameObject(x, y)
 {
@@ -46,6 +49,7 @@ void CKoopas::OnNoCollision(DWORD dt)
 void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (dynamic_cast<CGoomba*>(e->obj)) OnCollisionWithGoomba(e);
+	if (dynamic_cast<CGiftBox*>(e->obj)) OnCollisionWithGiftBox(e);
 	if (!e->obj->IsBlocking()) return;
 	if (dynamic_cast<CKoopas*>(e->obj)) return;
 
@@ -65,6 +69,25 @@ void CKoopas::OnCollisionWith(LPCOLLISIONEVENT e)
 				fallsensor->SetPosition(x - KOOPAS_BBOX_WIDTH - 1, y);
 			}
 		}
+	}
+}
+void CKoopas::OnCollisionWithGiftBox(LPCOLLISIONEVENT e)
+{
+	CGiftBox* giftbox = dynamic_cast<CGiftBox*>(e->obj);
+
+	if (state == KOOPAS_STATE_KICK) // Đụng từ dưới lên
+	{
+		if (giftbox->GetState() != GIFTBOX_STATE_PICKED)
+		{
+			giftbox->SetState(GIFTBOX_STATE_PICKED);
+			vy = 0.05f;
+
+			CBouncingCoin* coin = new CBouncingCoin(giftbox->GetX(), giftbox->GetY() - 16);
+			CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+			scene->AddObject(coin);  // Hàm tự định nghĩa trong scene
+
+		}
+
 	}
 }
 void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
@@ -91,8 +114,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == KOOPAS_STATE_KICK && (GetTickCount64() - kick_start > KOOPAS_KICK_TIMEOUT)) {
 		state = KOOPAS_STATE_DIE;
 	}
-	if ((state == KOOPAS_STATE_SHELL || state == KOOPAS_STATE_HELD) && (GetTickCount64() - shell_start > KOOPAS_SHELL_TIMEOUT))
-	{
+	if (state == KOOPAS_STATE_HELD && (GetTickCount64() - held_start > KOOPAS_HELD_TIMEOUT)) {
 		state = KOOPAS_STATE_WALKING;
 		y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2;
 		vx = -KOOPAS_WALKING_SPEED;
@@ -103,6 +125,18 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else {
 				fallsensor->SetPosition(x - KOOPAS_BBOX_WIDTH - 1, y);
 			}
+		}
+	}
+	if ((state == KOOPAS_STATE_SHELL) && (GetTickCount64() - shell_start > KOOPAS_SHELL_TIMEOUT))
+	{
+		state = KOOPAS_STATE_WALKING;
+		y -= (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2;
+		vx = -KOOPAS_WALKING_SPEED;
+		if (vx > 0) {
+			fallsensor->SetPosition(x + KOOPAS_BBOX_WIDTH + 1, y);
+		}
+		else {
+			fallsensor->SetPosition(x - KOOPAS_BBOX_WIDTH - 1, y);
 		}
 	}
 	if (state == KOOPAS_STATE_WALKING) {
@@ -165,17 +199,19 @@ void CKoopas::SetState(int state)
 		ay = 0;
 		break;
 	case KOOPAS_STATE_HELD:
+		held_start = GetTickCount64();
 		vx = 0;
 		vy = 0;
 		ay = 0;
 		break;
 	case KOOPAS_STATE_WALKING:
 		vx = -KOOPAS_WALKING_SPEED;
+		ay = KOOPAS_GRAVITY;
 		break;
 	case KOOPAS_STATE_KICK:
 		kick_start = GetTickCount64();
 		vy = 0;
-		ay = 0;
+		ay = KOOPAS_GRAVITY;
 		break;
 	case KOOPAS_STATE_DIE:
 		die_start = GetTickCount64();
