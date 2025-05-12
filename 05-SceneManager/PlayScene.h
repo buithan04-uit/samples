@@ -13,6 +13,7 @@
 #include "Pipe.h"
 #include "Box.h"
 #include "BoxColilsion.h"
+#include "Star.h"
 
 
 

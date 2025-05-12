@@ -129,13 +129,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float m = (float)atof(tokens[3].c_str());
 			float n = (float)atof(tokens[4].c_str());
 			float p = (float)atof(tokens[5].c_str());
+			float q = (float)atof(tokens[6].c_str());
 			for (float i = 1; i <= m; i++)
 			{
 				if (p == 1) {
-					obj = new CPipe (x, y + (i * n));
+					obj = new CPipe (x, y + (i * n) , q);
 				}
 				if (p == 0) {
-					obj = new CPipe(x + (i * n), y);
+					obj = new CPipe(x + (i * n), y , q);
 				}
 				if (i != m) objects.push_back(obj);
 			}
@@ -208,6 +209,24 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			}
 			if (p == 0) {
 				obj = new CCloud(x + (i * n), y , q);
+			}
+			if (i != m) objects.push_back(obj);
+		}
+		break;
+
+	}
+	case OBJECT_TYPE_STAR: {
+		float m = (float)atof(tokens[3].c_str());
+		float n = (float)atof(tokens[4].c_str());
+		float p = (float)atof(tokens[5].c_str());
+		float q = (float)atof(tokens[6].c_str());
+		for (float i = 1; i <= m; i++)
+		{
+			if (p == 1) {
+				obj = new CStar(x, y + (i * n), q);
+			}
+			if (p == 0) {
+				obj = new CStar(x + (i * n), y, q);
 			}
 			if (i != m) objects.push_back(obj);
 		}
