@@ -11,8 +11,7 @@ protected:
 	int BoxHeight;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual int IsCollidable() { return 1; };
-	virtual int IsBlocking() { return 1; }
+	int IsDirectionColliable(float nx, float ny);
 
 
 public:

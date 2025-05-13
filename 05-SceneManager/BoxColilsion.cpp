@@ -15,7 +15,11 @@ void CBoxCollision::GetBoundingBox(float& left, float& top, float& right, float&
 	bottom = top + BoxHeight;
 }
 
-
+int CBoxCollision::IsDirectionColliable(float nx, float ny)
+{
+	if (nx == 0 && ny == -1) return 1;
+	else return 0;
+}
 
 void CBoxCollision::Render() {
 	RenderBoundingBox();

@@ -48,15 +48,15 @@ CBox::CBox(float x, float y, int type) : CGameObject(x, y)
 void CBox::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
-	if (this->type == 0)
+	if (this->type == BOX_TYPE_1)
 		animations->Get(ID_ANI_BOX_1)->Render(x, y);
-	else if (this->type == 1)
+	else if (this->type == BOX_TYPE_2)
 		animations->Get(ID_ANI_BOX_2)->Render(x, y);
-	else if (this->type == 2)
+	else if (this->type == BOX_TYPE_3)
 		animations->Get(ID_ANI_BOX_3)->Render(x, y);
-	else if (this->type == 3)
+	else if (this->type == BOX_TYPE_4)
 		animations->Get(ID_ANI_BOX_4)->Render(x, y);
-	else if (this->type == 4)
+	else if (this->type == BOX_TYPE_5)
 		animations->Get(ID_ANI_BOX_5)->Render(x, y);
 	//RenderBoundingBox();
 }

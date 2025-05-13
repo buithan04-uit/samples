@@ -12,7 +12,7 @@
 #include "PlayScene.h"
 #include "Fallsensor.h"
 #include "Portal.h"
-
+#include "BoxColilsion.h"
 #include "Collision.h"
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -88,6 +88,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithKoopas(e);
 	else if (dynamic_cast<CGiftBox*>(e->obj))
 		OnCollisionWithGiftBox(e);
+	else if (dynamic_cast<CBoxCollision*>(e->obj))
+		OnCollisionWithBoxCollision(e);
 }
 
 void CMario::OnCollisionWithGiftBox(LPCOLLISIONEVENT e)
@@ -108,6 +110,12 @@ void CMario::OnCollisionWithGiftBox(LPCOLLISIONEVENT e)
 		}
 		
 	}
+}
+
+void CMario::OnCollisionWithBoxCollision(LPCOLLISIONEVENT e)
+{
+	CBoxCollision* box = dynamic_cast<CBoxCollision*>(e->obj);
+	// do something
 }
 
 
@@ -183,10 +191,10 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 				if (state != MARIO_STATE_RUNNING_LEFT && state != MARIO_STATE_RUNNING_RIGHT && koopas->GetState() != KOOPAS_STATE_HELD) {
 					koopas->SetState(KOOPAS_STATE_KICK);
 					if (e->nx < 0) {
-						koopas->SetSpeed(0.3, 0);
+						koopas->SetSpeed(0.3f, 0);
 					}
 					else {
-						koopas->SetSpeed(-0.3, 0);
+						koopas->SetSpeed(-0.3f, 0);
 					}
 				}
 				else {

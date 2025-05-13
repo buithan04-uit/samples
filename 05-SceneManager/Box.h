@@ -6,11 +6,11 @@
 #include "debug.h"
 #include "BoxColilsion.h"
 
-#define BOX_TYPE_1 1
-#define BOX_TYPE_1 2
-#define BOX_TYPE_1 3
-#define BOX_TYPE_1 4
-#define BOX_TYPE_1 5
+#define BOX_TYPE_1 0
+#define BOX_TYPE_2 1
+#define BOX_TYPE_3 2
+#define BOX_TYPE_4 3
+#define BOX_TYPE_5 4
 
 #define ID_ANI_BOX_1 70011
 #define ID_ANI_BOX_2 70012
