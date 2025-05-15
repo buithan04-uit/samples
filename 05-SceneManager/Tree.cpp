@@ -5,7 +5,7 @@ void CTree::Render()
 	CAnimations* animations = CAnimations::GetInstance();
 	if (this->state == STATE_TREE_SMALL) animations->Get(ID_ANI_TREE_SMALL)->Render(x, y);
 	else if (this->state == STATE_TREE_MEDIUM)
-		animations->Get(ID_ANI_TREE_MEDIUM)->Render(x, y);
+		animations->Get(ID_ANI_TREE_MEDIUM)->Render(x + 55, y + 8);
 	else if (this->state == STATE_TREE_LARGE)
 		animations->Get(ID_ANI_TREE_LARGE)->Render(x, y);
 	else if (this->state == STATE_TREE_SUPER)
