@@ -14,10 +14,9 @@ class CFallsensor : public CGameObject {
 
 		virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom); 	  	
 		virtual int IsCollidable() { return 1; }; 	
-		virtual int IsBlocking() { return 0; } 	
 		virtual void OnNoCollision(DWORD dt);  	
 		virtual void OnCollisionWith(LPCOLLISIONEVENT e);
-		//int IsDirectionColliable(float nx, float ny);
+		int IsDirectionColliable(float nx, float ny);
 	public: 	
 		virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects); 	
 		virtual void Render(); 	CFallsensor(float x, float y); 	

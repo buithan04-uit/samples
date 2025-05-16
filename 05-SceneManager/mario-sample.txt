@@ -23,3 +23,5 @@ height	240
 50	textures\misc1.png
 60	textures\misc2.png
 70	textures\misc3.png
+80	textures\misc4.png
+90	textures\misc5.png

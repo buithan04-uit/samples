@@ -13,13 +13,22 @@
 #define GIFTBOX_STATE_IDLE 0
 #define GIFTBOX_STATE_PICKED 1
 
+#define GIFTBOX_TYPE_1 0
+#define GIFTBOX_TYPE_2 1
+#define GIFTBOX_TYPE_3 2
+
 class CGiftBox : public CGameObject {
+	int type;
 public:
-	CGiftBox(float x, float y, int state) : CGameObject(x, y) { this->state = state; }
+	CGiftBox(float x, float y, int state , int type) : CGameObject(x, y) { 
+		this->state = state; 
+		this->type = type;
+	}
 	void Render();
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	virtual void SetState(int state);
 	float GetX() { return x; }
 	float GetY() { return y; }
+	int GetType() { return type; }	
 };

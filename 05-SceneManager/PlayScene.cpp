@@ -184,13 +184,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float n = (float)atof(tokens[4].c_str());
 		float p = (float)atof(tokens[5].c_str());
 		int q = (int)atoi(tokens[6].c_str());
+		int k = (int)atoi(tokens[7].c_str());
 		for (float i = 1; i <= m; i++)
 		{
 			if (p == 1) {
-				obj = new CGiftBox(x, y + (i * n) , q);
+				obj = new CGiftBox(x, y + (i * n) , q , k);
 			}
 			if (p == 0) {
-				obj = new CGiftBox(x + (i * n), y , q);
+				obj = new CGiftBox(x + (i * n), y , q , k);
 			}
 			if (i != m ) objects.push_back(obj);
 		}
@@ -227,6 +228,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			}
 			if (p == 0) {
 				obj = new CStar(x + (i * n), y, q);
+			}
+			if (i != m) objects.push_back(obj);
+		}
+		break;
+
+	}
+	case OBJECT_TYPE_ENEMY: {
+		float m = (float)atof(tokens[3].c_str());
+		float n = (float)atof(tokens[4].c_str());
+		float p = (float)atof(tokens[5].c_str());
+		for (float i = 1; i <= m; i++)
+		{
+			if (p == 1) {
+				obj = new CEnemy(x, y + (i * n));
+			}
+			if (p == 0) {
+				obj = new CEnemy(x + (i * n), y);
 			}
 			if (i != m) objects.push_back(obj);
 		}
@@ -402,7 +420,9 @@ void CPlayScene::Update(DWORD dt)
 void CPlayScene::Render()
 {
 	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+		if (!dynamic_cast<CGiftBox*>(objects[i])) objects[i]->Render();
+	for (int i = 0; i < objects.size(); i++)
+		if (dynamic_cast<CGiftBox*>(objects[i])) objects[i]->Render();
 }
 
 /*

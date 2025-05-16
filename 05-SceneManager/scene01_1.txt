@@ -13,16 +13,19 @@ giftbox.txt
 pipe.txt
 box.txt
 star.txt
+enemy.txt
+bullet.txt
+mushroom.txt
 #
 [OBJECTS]
 # type	x	y	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = coin , 5 = plaform , 6  = tree, 7 = cloud, 8 = giftbox, 9 = pipe , 10 = box , 11 = star
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = coin , 5 = plaform , 6  = tree, 7 = cloud, 8 = giftbox, 9 = pipe , 10 = box , 11 = star ,12 = enemy
 # See OBJECT_TYPE constants in AssetIDs.h
 
 
 
 # BRICKS
-1	0	0	20	16	1	2
+1	0	0	30	16	1	2
 
 1	1580	300	2	16	0	1
 
@@ -44,6 +47,8 @@ star.txt
 1	2397	332	2	16	0	1
 1	2397	270	2	16	0	1
 
+# ENEMY
+12	390	345	1	70	0
 
 # STAR
 11	60	300	1	70	0	2
@@ -65,13 +70,14 @@ star.txt
 9	2480	357	1	31	0	1
 
 # GIFTBOX
-8	200	317	2	16	0	0
-8	250	270	2	16	0	0
-8	450	285	1	16	0	0
-8	695	350	1	16	0	0
-8	745	318	1	16	0	0
-8	1505	110	1	16	0	0
-8	1530	330	1	16	0	0
+8	200	317	2	16	0	0	0
+8	250	270	1	16	0	0	0
+8	266	270	1	16	0	0	1
+8	450	285	1	16	0	0	0
+8	695	350	1	16	0	0	0
+8	745	318	1	16	0	0	0
+8	1505	110	1	16	0	0	0
+8	1530	330	1	16	0	0	0
 
 
 # Tree
@@ -133,14 +139,16 @@ star.txt
 4	1808	112
 
 # MARIO
-0	2285	210
+0	300	210
 
 
 #Goomba
-#2	400	210
+2	250	310
+2	600	310
+2	630	310
 
 #Koopas
-#3	200	210
+3	550	310
 
 #Platform
 #5	90	336	16	16	16	51000	52000	53000

@@ -14,6 +14,10 @@
 #include "Portal.h"
 #include "BoxColilsion.h"
 #include "Collision.h"
+#include "Enemy.h"
+#include "Bullet.h"
+#include "Mushroom.h"
+
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	vy += ay * dt;
@@ -90,22 +94,81 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGiftBox(e);
 	else if (dynamic_cast<CBoxCollision*>(e->obj))
 		OnCollisionWithBoxCollision(e);
+	else if (dynamic_cast<CEnemy*>(e->obj))
+		OnCollisionWithEnemy(e);
+	else if (dynamic_cast<CBullet*>(e->obj))
+		OnCollisionWithBullet(e);
+	else if (dynamic_cast<CMushroom*>(e->obj))
+		OnCollisionWithMushroom(e);
+}
+
+void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
+{
+	CMushroom* mushroom = dynamic_cast<CMushroom*>(e->obj);
+	if (untouchable == 0)
+	{
+		if (level == MARIO_LEVEL_SMALL)
+		{
+			y -= 20;
+			level = MARIO_LEVEL_BIG;
+			mushroom->SetState(MUSHROOM_STATE_DIE);
+		}
+	}
+}
+void CMario::OnCollisionWithEnemy(LPCOLLISIONEVENT e)
+{
+	if (untouchable == 0)
+	{
+		if (level > MARIO_LEVEL_SMALL)
+		{
+			level = MARIO_LEVEL_SMALL;
+			StartUntouchable();
+		}
+		else
+		{
+			DebugOut(L">>> Mario DIE >>> \n");
+			SetState(MARIO_STATE_DIE);
+		}
+	}
+}
+void CMario::OnCollisionWithBullet(LPCOLLISIONEVENT e)
+{
+	if (untouchable == 0)
+	{
+		if (level > MARIO_LEVEL_SMALL)
+		{
+			level = MARIO_LEVEL_SMALL;
+			StartUntouchable();
+		}
+		else
+		{
+			DebugOut(L">>> Mario DIE >>> \n");
+			SetState(MARIO_STATE_DIE);
+		}
+	}
 }
 
 void CMario::OnCollisionWithGiftBox(LPCOLLISIONEVENT e)
 {
 	CGiftBox* giftbox = dynamic_cast<CGiftBox*>(e->obj);
 
-	if (e->ny > 0) // Đụng từ dưới lên
+	if (e->ny > 0) 
 	{
 		if (giftbox->GetState() != GIFTBOX_STATE_PICKED)
 		{
 			giftbox->SetState(GIFTBOX_STATE_PICKED);
-			vy = 0.05f;
+			vy = 0.03f;
 
-			CBouncingCoin* coin = new CBouncingCoin(giftbox->GetX(), giftbox->GetY() - 16);
-			CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-			scene->AddObject(coin);  // Hàm tự định nghĩa trong scene
+			if (giftbox->GetType() == GIFTBOX_TYPE_1) {
+				CBouncingCoin* coin = new CBouncingCoin(giftbox->GetX(), giftbox->GetY() - 16);
+				CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+				scene->AddObject(coin);
+			}
+			else if (giftbox->GetType() == GIFTBOX_TYPE_2) {
+				CMushroom* mushroom = new CMushroom(giftbox->GetX(), giftbox->GetY());
+				CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+				scene->AddObject(mushroom);
+			}
 
 		}
 		
@@ -164,10 +227,10 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 			koopas->SetState(KOOPAS_STATE_SHELL);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
-		else if (koopas->GetState() != KOOPAS_STATE_DIE)
+		else if (koopas->GetState() == KOOPAS_STATE_KICK)
 		{
-			//koopas->SetState(KOOPAS_STATE_DIE);
-			//vy = -MARIO_JUMP_DEFLECT_SPEED;
+			koopas->SetState(KOOPAS_STATE_SHELL);
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 	}
 	else // hit by Koopas
@@ -191,10 +254,10 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 				if (state != MARIO_STATE_RUNNING_LEFT && state != MARIO_STATE_RUNNING_RIGHT && koopas->GetState() != KOOPAS_STATE_HELD) {
 					koopas->SetState(KOOPAS_STATE_KICK);
 					if (e->nx < 0) {
-						koopas->SetSpeed(0.3f, 0);
+						koopas->SetSpeed(0.23f, 0);
 					}
 					else {
-						koopas->SetSpeed(-0.3f, 0);
+						koopas->SetSpeed(-0.23f, 0);
 					}
 				}
 				else {
@@ -203,7 +266,6 @@ void CMario::OnCollisionWithKoopas(LPCOLLISIONEVENT e)
 
 					if (koopas->GetState() == KOOPAS_STATE_SHELL && !isHoldingKoopas() && (e->nx != 0) && isPressingA)
 					{
-						// Cầm Koopa
 						heldKoopas = koopas;
 						koopas->SetState(KOOPAS_STATE_HELD);
 						koopas->SetIsBeingHeld(true);
@@ -494,9 +556,8 @@ void CMario::ReleaseKoopas()
 		heldKoopas->SetIsBeingHeld(false);
 
 		// Tùy hướng ném
-		float speed = nx > 0 ? 0.3f : -0.3f;
+		float speed = nx > 0 ? 0.23f : -0.23f;
 		heldKoopas->SetSpeed(speed, 0.01f);
-
 		heldKoopas = nullptr;
 		hold_start = 0;
 	}

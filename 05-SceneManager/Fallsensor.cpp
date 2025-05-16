@@ -24,6 +24,12 @@ void CFallsensor::GetBoundingBox(float& left, float& top, float& right, float& b
 	}
 }
 
+int CFallsensor::IsDirectionColliable(float nx, float ny)
+{
+	if (nx == 0 && ny == 1) return 1;
+	else return 0;
+}
+
 void CFallsensor::OnNoCollision(DWORD dt) {
     x += vx * dt;
     y += vy * dt;
@@ -31,7 +37,6 @@ void CFallsensor::OnNoCollision(DWORD dt) {
 
 void CFallsensor::OnCollisionWith(LPCOLLISIONEVENT e ) {
     if (!e->obj->IsBlocking()) return;
-	if (dynamic_cast<CMario*>(e->obj)) return;
 
     if (e->ny != 0) {
         vy = 0;
