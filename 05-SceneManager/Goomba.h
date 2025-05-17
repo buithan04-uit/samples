@@ -2,6 +2,8 @@
 #include "GameObject.h"
 
 #define GOOMBA_GRAVITY 0.002f
+#define GOOMBA_1_GRAVITY 0.0005f
+
 #define GOOMBA_WALKING_SPEED 0.03f
 
 
@@ -9,20 +11,33 @@
 #define GOOMBA_BBOX_HEIGHT 14
 #define GOOMBA_BBOX_HEIGHT_DIE 7
 
+#define GOOMBA_1_FLY_BBOX_WIDTH 19
+#define GOOMBA_1_FLY_BBOX_HEIGHT 23
+#define GOOMBA_1_BBOX_WIDTH 15
+#define GOOMBA_1_BBOX_HEIGHT 15
+#define GOOMBA_1_BBOX_HEIGHT_DIE 8
 #define GOOMBA_DIE_TIMEOUT 500
 
 #define GOOMBA_STATE_WALKING 100
 #define GOOMBA_STATE_DIE 200
+#define GOOMBA_1_STATE_FLY 300
+#define GOOMBA_1_STATE_WALKING 400
+#define GOOMBA_1_STATE_DIE 500
 
 #define ID_ANI_GOOMBA_WALKING 5000
 #define ID_ANI_GOOMBA_DIE 5001
+#define ID_ANI_GOOMBA_1_FLY 5002
+#define ID_ANI_GOOMBA_1_WALKING 5003
+#define ID_ANI_GOOMBA_1_DIE 5004
+#define GOOMBA_1_JUMP_SPEED_Y 0.2f
+
 
 class CGoomba : public CGameObject
 {
 protected:
 	float ax;				
 	float ay; 
-
+	int type;
 	ULONGLONG die_start;
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
@@ -36,6 +51,6 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
 public: 	
-	CGoomba(float x, float y);
+	CGoomba(float x, float y , int type);
 	virtual void SetState(int state);
 };

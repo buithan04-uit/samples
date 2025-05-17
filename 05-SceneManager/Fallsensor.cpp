@@ -54,5 +54,5 @@ void CFallsensor::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects) {
 }
 
 void CFallsensor::Render() {
-    RenderBoundingBox(); 
+    //RenderBoundingBox(); 
 }

@@ -120,7 +120,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
+	case OBJECT_TYPE_GOOMBA: {
+		int type = atoi(tokens[3].c_str());
+		obj = new CGoomba(x, y, type);
+		break;
+	}
 	case OBJECT_TYPE_KOOPAS: { 
 		obj = new CKoopas (x, y);
 		break;
@@ -160,6 +164,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		break;
 		
+	}
+	case OBJECT_TYPE_HIDEBOX: {
+		float m = (float)atof(tokens[3].c_str());
+		float n = (float)atof(tokens[4].c_str());
+		float p = (float)atof(tokens[5].c_str());
+		for (float i = 1; i <= m; i++)
+		{
+			if (p == 1) {
+				obj = new CHideBox(x, y - (i * n));
+			}
+			if (p == 0) {
+				obj = new CHideBox(x + (i * n), y);
+			}
+			if (i != m) objects.push_back(obj);
+		}
+		break;
+
 	}
 	case OBJECT_TYPE_TREE: {
 		float m = (float)atof(tokens[3].c_str());

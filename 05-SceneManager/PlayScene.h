@@ -15,7 +15,7 @@
 #include "BoxColilsion.h"
 #include "Star.h"
 #include "Enemy.h"
-
+#include "HideBox.h"
 
 
 class CPlayScene: public CScene

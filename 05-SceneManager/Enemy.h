@@ -1,9 +1,8 @@
 ﻿#pragma once
 #include "GameObject.h"
 
-// Các hằng số cho chức năng bắn đạn
-#define ENEMY_SHOOT_RANGE 200.0f       // Phạm vi mà enemy nhận biết Mario
-#define ENEMY_SHOOT_COOLDOWN 2000      // 2000 ms giữa các lần bắn 
+#define ENEMY_SHOOT_RANGE 200.0f       
+#define ENEMY_SHOOT_COOLDOWN 2000      
 
 
 #define ENEMY_BBOX_WIDTH 15

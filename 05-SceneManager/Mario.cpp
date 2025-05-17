@@ -1,9 +1,7 @@
 ﻿#include <algorithm>
 #include "debug.h"
-
 #include "Mario.h"
 #include "Game.h"
-
 #include "Goomba.h"
 #include "Koopas.h"
 #include "GiftBox.h"
@@ -189,10 +187,20 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	// jump on top >> kill Goomba and deflect a bit 
 	if (e->ny < 0)
 	{
-		if (goomba->GetState() != GOOMBA_STATE_DIE)
+		if (goomba->GetState() != GOOMBA_STATE_DIE && goomba->GetState() != GOOMBA_1_STATE_DIE)
 		{
-			goomba->SetState(GOOMBA_STATE_DIE);
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			if (goomba->GetState() == GOOMBA_1_STATE_FLY) {
+				goomba->SetState(GOOMBA_1_STATE_WALKING);
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+			}
+			else if (goomba->GetState() == GOOMBA_1_STATE_WALKING) {
+				goomba->SetState(GOOMBA_1_STATE_DIE);
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+			}
+			else {
+				goomba->SetState(GOOMBA_STATE_DIE);
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+			}
 		}
 	}
 	else // hit by Goomba

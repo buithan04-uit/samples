@@ -94,7 +94,18 @@ void CKoopas::OnCollisionWithGoomba(LPCOLLISIONEVENT e) {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 	if (state == KOOPAS_STATE_KICK)
 	{
-		goomba->SetState(GOOMBA_STATE_DIE);
+		if (goomba->GetState() != GOOMBA_STATE_DIE && goomba->GetState() != GOOMBA_1_STATE_DIE) {
+
+			if (goomba->GetState() == GOOMBA_1_STATE_FLY) {
+				goomba->SetState(GOOMBA_1_STATE_WALKING);
+			}
+			else if (goomba->GetState() == GOOMBA_1_STATE_WALKING) {
+				goomba->SetState(GOOMBA_1_STATE_DIE);
+			}
+			else {
+				goomba->SetState(GOOMBA_STATE_DIE);
+			}
+		}
 	}
 }
 
@@ -183,7 +194,7 @@ void CKoopas::Render()
 
 	fallsensor->Render();
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CKoopas::SetState(int state)

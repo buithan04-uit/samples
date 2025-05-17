@@ -162,6 +162,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GiftBox.cpp" />
     <ClCompile Include="Goomba.cpp" />
+    <ClCompile Include="HideBox.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GiftBox.h" />
     <ClInclude Include="Goomba.h" />
+    <ClInclude Include="HideBox.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Mario.h" />

@@ -187,7 +187,7 @@ void CEnemy::Render()
 	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CEnemy::SetState(int state)
