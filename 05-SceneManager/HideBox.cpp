@@ -3,7 +3,7 @@
 void CHideBox::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CHideBox::GetBoundingBox(float& l, float& t, float& r, float& b)

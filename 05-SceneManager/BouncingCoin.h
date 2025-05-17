@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Coin.h"
+#include "Mario.h"
 
 #define COIN_BOUNCE_SPEED_Y -0.25f
 #define COIN_GRAVITY 0.0009f
@@ -22,7 +23,16 @@ public:
 		if (GetTickCount64() - startTime >= COIN_BOUNCE_LIFETIME) {
 			Delete();
 
-			// coin ++;
+			CMario* mario = nullptr;
+			for (auto obj : *coObjects)
+			{
+				mario = dynamic_cast<CMario*>(obj);
+				if (mario) break;
+			}
+			if (mario)
+			{
+				mario->SetCoin(mario->GetCoin() + 1);
+			}
 		}
 	}
 };

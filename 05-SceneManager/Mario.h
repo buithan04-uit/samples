@@ -104,6 +104,7 @@
 
 class CMario : public CGameObject
 {
+protected:
 	BOOLEAN isSitting;
 	float maxVx;
 	float ax;				// acceleration on x 
@@ -159,7 +160,8 @@ public:
 	{ 
 		return (state != MARIO_STATE_DIE); 
 	}
-
+	int GetCoin() { return coin; }
+	void SetCoin(int coin) { this->coin = coin; }
 	void SetIsPressingA(bool isPressingA) { this->isPressingA = isPressingA; }
 
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }

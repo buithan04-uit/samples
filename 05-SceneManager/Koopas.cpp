@@ -3,6 +3,7 @@
 #include "GiftBox.h"
 #include "BouncingCoin.h"
 #include "PlayScene.h"
+#include "Mushroom.h"
 
 CKoopas::CKoopas(float x, float y) :CGameObject(x, y)
 {
@@ -82,9 +83,17 @@ void CKoopas::OnCollisionWithGiftBox(LPCOLLISIONEVENT e)
 			giftbox->SetState(GIFTBOX_STATE_PICKED);
 			vy = 0.05f;
 
-			CBouncingCoin* coin = new CBouncingCoin(giftbox->GetX(), giftbox->GetY() - 16);
-			CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
-			scene->AddObject(coin);  // Hàm tự định nghĩa trong scene
+
+			if (giftbox->GetType() == GIFTBOX_TYPE_1) {
+				CBouncingCoin* coin = new CBouncingCoin(giftbox->GetX(), giftbox->GetY() - 16);
+				CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+				scene->AddObject(coin);
+			}
+			else if (giftbox->GetType() == GIFTBOX_TYPE_2) {
+				CMushroom* mushroom = new CMushroom(giftbox->GetX(), giftbox->GetY());
+				CPlayScene* scene = (CPlayScene*)CGame::GetInstance()->GetCurrentScene();
+				scene->AddObject(mushroom);
+			}
 
 		}
 
