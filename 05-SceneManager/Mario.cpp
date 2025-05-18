@@ -23,7 +23,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
-	// reset untouchable timer if untouchable time has passed
 	if ( GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME) 
 	{
 		untouchable_start = 0;
@@ -42,12 +41,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 
 		heldKoopas->SetPosition(koopaX, koopaY);
-		heldKoopas->SetSpeed(0, 0); // Không rơi khi đang bị giữ
+		heldKoopas->SetSpeed(0, 0);
 
-		// Kiểm tra timeout
+
 		if (GetTickCount64() - hold_start >= MARIO_HOLDING_TIMEOUT)
 		{
-			// Tự động thả Koopas và chuyển sang trạng thái đi lại
 			heldKoopas->SetIsBeingHeld(false);
 			heldKoopas->SetState(KOOPAS_STATE_WALKING);
 			heldKoopas->SetPosition(koopaX, koopaY - 10);

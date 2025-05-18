@@ -9,7 +9,7 @@
 #include "Portal.h"
 #include "Coin.h"
 #include "Platform.h"
-
+#include "Bullet.h"
 #include "SampleKeyEventHandler.h"
 
 using namespace std;
@@ -441,9 +441,9 @@ void CPlayScene::Update(DWORD dt)
 void CPlayScene::Render()
 {
 	for (int i = 0; i < objects.size(); i++)
-		if (!dynamic_cast<CGiftBox*>(objects[i])) objects[i]->Render();
+		if (!dynamic_cast<CGiftBox*>(objects[i]) && !dynamic_cast<CBullet*>(objects[i])) objects[i]->Render();
 	for (int i = 0; i < objects.size(); i++)
-		if (dynamic_cast<CGiftBox*>(objects[i])) objects[i]->Render();
+		if (dynamic_cast<CGiftBox*>(objects[i]) || dynamic_cast<CBullet*>(objects[i])) objects[i]->Render();
 }
 
 /*

@@ -1,5 +1,5 @@
 ﻿#include "Bullet.h"
-
+#include "Mario.h"
 
 CBullet::CBullet(float x, float y, float vx , float vy) : CGameObject(x, y)
 {
@@ -15,19 +15,35 @@ void CBullet::OnNoCollision(DWORD dt) {
 }
 
 void CBullet::OnCollisionWith(LPCOLLISIONEVENT e) {
-	isDeleted = true;
+    // Chỉ xử lý khi đụng trúng Mario
+    if (!dynamic_cast<CMario*>(e->obj))
+        return;
+
+    isDeleted = true;
 }
 void CBullet::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
     vx += ax * dt;
-	vy += ay * dt;
+    vy += ay * dt;
 
-	if (GetTickCount64() - bornTime > BULLET_TIMEOUT) {
-		isDeleted = true;
-	}
+    if (GetTickCount64() - bornTime > BULLET_TIMEOUT) {
+        isDeleted = true;
+    }
+
     CGameObject::Update(dt, coObjects);
-    CCollision::GetInstance()->Process(this, dt, coObjects);
+
+    // Lọc lại danh sách, chỉ lấy Mario
+    vector<LPGAMEOBJECT> filtered;
+    for (auto obj : *coObjects) {
+        if (dynamic_cast<CMario*>(obj)) {
+            filtered.push_back(obj);
+            break;
+        }
+    }
+
+    CCollision::GetInstance()->Process(this, dt, &filtered);
 }
+
 
 void CBullet::Render()
 {

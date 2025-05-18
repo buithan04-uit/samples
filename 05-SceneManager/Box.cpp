@@ -47,6 +47,7 @@ CBox::CBox(float x, float y, int type) : CGameObject(x, y)
 
 void CBox::Render()
 {
+	CSprites* sprites = CSprites::GetInstance();
 	CAnimations* animations = CAnimations::GetInstance();
 	if (this->type == BOX_TYPE_1)
 		animations->Get(ID_ANI_BOX_1)->Render(x, y);
