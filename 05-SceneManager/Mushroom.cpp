@@ -76,11 +76,11 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (isMarioLeft)
 				{
-					vx = 0.15f; ;
+					vx = 0.07f; ;
 				}
 				else
 				{
-					vx = -0.15f;
+					vx = -0.07f;
 				}
 			}
 			 

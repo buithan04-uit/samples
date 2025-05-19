@@ -27,9 +27,9 @@ void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& botto
 	}
 	else if (state == KOOPAS_STATE_SHELL || state == KOOPAS_STATE_KICK || state == KOOPAS_STATE_HELD)
 	{
-		left = x - KOOPAS_BBOX_WIDTH / 2;
+		left = x - KOOPAS_BBOX_WIDTH_SHELL / 2;
 		top = y - KOOPAS_BBOX_HEIGHT_SHELL / 2;
-		right = left + KOOPAS_BBOX_WIDTH;
+		right = left + KOOPAS_BBOX_WIDTH_SHELL;
 		bottom = top + KOOPAS_BBOX_HEIGHT_SHELL;
 	}
 	else
@@ -132,7 +132,15 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	}
 	if (state == KOOPAS_STATE_KICK && (GetTickCount64() - kick_start > KOOPAS_KICK_TIMEOUT)) {
-		state = KOOPAS_STATE_DIE;
+		float cx, cy;
+		CGame::GetInstance()->GetCamPos(cx, cy);
+
+		// Kiểm tra nếu Koopas đã ra khỏi màn hình
+		if (x + KOOPAS_BBOX_WIDTH < cx || x > cx + SCREEN_WIDTH ||
+			y + KOOPAS_BBOX_HEIGHT < cy || y > cy + SCREEN_HEIGHT)
+		{
+			state = KOOPAS_STATE_DIE;
+		}
 	}
 	if (state == KOOPAS_STATE_HELD && (GetTickCount64() - held_start > KOOPAS_HELD_TIMEOUT)) {
 		state = KOOPAS_STATE_WALKING;
@@ -208,12 +216,13 @@ void CKoopas::Render()
 
 void CKoopas::SetState(int state)
 {
-	CGameObject::SetState(state);
 	switch (state)
 	{
 	case KOOPAS_STATE_SHELL:
 		shell_start = GetTickCount64();
-		y += (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2;
+		if (this->state == KOOPAS_STATE_WALKING) {
+			y += (KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_SHELL) / 2;
+		}
 		vx = 0;
 		vy = 0;
 		ay = 0;
@@ -239,4 +248,5 @@ void CKoopas::SetState(int state)
 		ay = 0;
 		break;
 	}
+	CGameObject::SetState(state);
 }

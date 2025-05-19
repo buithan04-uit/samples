@@ -25,3 +25,6 @@ height	240
 70	textures\misc3.png
 80	textures\misc4.png
 90	textures\misc5.png
+100	textures\enemies-custom-5.png
+110	textures\bg-1-1.png
+
