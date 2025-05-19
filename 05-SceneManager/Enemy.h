@@ -9,8 +9,8 @@
 #define ENEMY_BBOX_HEIGHT 31
 #define ENEMY_BBOX_HEIGHT_DIE 7
 
-#define ENEMY_UP_TIMEOUT 3000
-#define ENEMY_DOWN_TIMEOUT 3000
+#define ENEMY_UP_TIMEOUT 1500
+#define ENEMY_DOWN_TIMEOUT 1500
 
 
 #define ENEMY_STATE_LEFT_DOWN 100
@@ -29,6 +29,7 @@ protected:
 	float ax;
 	float ay;
 	bool isUp;
+	bool hasShot;
 
 	ULONGLONG up_start;
 	ULONGLONG down_start;

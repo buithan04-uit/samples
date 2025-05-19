@@ -12,6 +12,7 @@ CEnemy::CEnemy(float x, float y) : CGameObject(x, y)
 	this->ax = 0;
 	this->ay = 0;
 	this->isUp = true;
+
 	this->up_start = 0;
 	this->down_start = 0;
 	this->lastShootTime = 0;
@@ -49,6 +50,9 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	ULONGLONG current_time = GetTickCount64();
 
 	CMario* mario = nullptr;
+	float marioX, marioY;
+	bool isMarioLeft;
+	bool isMarioAbove;
 	for (auto obj : *coObjects)
 	{
 		mario = dynamic_cast<CMario*>(obj);
@@ -56,11 +60,10 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	if (mario)
 	{
-		float marioX, marioY;
-		mario->GetPosition(marioX, marioY);
 
-		bool isMarioLeft = (marioX < x);
-		bool isMarioAbove = (marioY < y);
+		mario->GetPosition(marioX, marioY);
+		isMarioLeft = (marioX < x);
+		isMarioAbove = (marioY < y);
 
 		if (isMarioLeft && isMarioAbove)
 			SetState(ENEMY_STATE_LEFT_UP);
@@ -71,37 +74,46 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else
 			SetState(ENEMY_STATE_RIGHT_DOWN);
 	}
-	// Move up
+	bool isMarioFar = (marioX < x - 35 || marioX > x + 35);
+
 	if (isUp)
 	{
 		if (y > 310)
 		{
-			vy = -0.05f;
-			up_start = 0;
+			if (up_start == 0 && isMarioFar)
+			{
+				vy = -0.05f;
+				up_start = current_time; 
+			}
+			else if (up_start != 0)
+			{
+				vy = -0.05f;
+			}
+			else
+			{
+				vy = 0;
+			}
 		}
-		else
+		else 
 		{
 			vy = 0;
 			y = 310;
 
-			if (up_start == 0)
-				up_start = current_time;
-			else if (current_time - up_start >= ENEMY_UP_TIMEOUT)
+			if (up_start != 0 && current_time - up_start >= ENEMY_UP_TIMEOUT)
 			{
 				isUp = false;
 				up_start = 0;
 			}
 		}
 	}
-	// Move down
-	else
+	else 
 	{
 		if (y < 350)
 		{
 			vy = 0.05f;
 			down_start = 0;
 		}
-		else
+		else 
 		{
 			vy = 0;
 			y = 350;
@@ -110,7 +122,11 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				down_start = current_time;
 			else if (current_time - down_start >= ENEMY_DOWN_TIMEOUT)
 			{
-				isUp = true;
+				if (isMarioFar)
+				{
+					isUp = true; 
+					up_start = 0; 
+				}
 				down_start = 0;
 			}
 		}
@@ -131,10 +147,53 @@ void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			mario->GetPosition(marioX, marioY);
 			float distX = fabs(marioX - x);
 
-			if (distX <= ENEMY_SHOOT_RANGE && (current_time - lastShootTime) >= ENEMY_SHOOT_COOLDOWN)
+			if (distX <= ENEMY_SHOOT_RANGE && (current_time - lastShootTime) >= ENEMY_SHOOT_COOLDOWN && mario->GetState() != MARIO_STATE_DIE)
 			{
-				ShootBullet(marioX, marioY);
-				lastShootTime = current_time;
+				if (isMarioLeft && isMarioAbove)
+				{
+					if (marioX > 305) {
+						ShootBullet(320, 260);
+						lastShootTime = current_time;
+					}
+					else {
+						ShootBullet(320, 288);
+						lastShootTime = current_time;
+					}
+				}
+				else if (isMarioLeft && !isMarioAbove)
+				{
+					if (marioX > 305) {
+						ShootBullet(330, 366);
+						lastShootTime = current_time;
+					}
+					else {
+						ShootBullet(220, 366);
+						lastShootTime = current_time;
+					}
+				}
+				else if (!isMarioLeft && isMarioAbove)
+				{
+
+					if (marioX > 475) {
+						ShootBullet(450, 295);
+						lastShootTime = current_time;
+					}
+					else {
+						ShootBullet(450, 255);
+						lastShootTime = current_time;
+					}
+				}
+				else
+				{
+					if (marioX > 475) {
+						ShootBullet(563, 366);
+						lastShootTime = current_time;
+					}
+					else {
+						ShootBullet(450, 366);
+						lastShootTime = current_time;
+					}
+				}
 			}
 		}
 	}
